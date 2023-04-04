@@ -27,10 +27,14 @@ public class ServerMain {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast(
-                        new HttpServerCodec(),
-                        new HttpObjectAggregator(65535),
+                        new HttpServerCodec(), // http 服务器编码解码器
+                        new HttpObjectAggregator(65535),// 内容长度限制
+                        //webSocket 协议处理器  在这里处理握手 ping pong 等消息
                         new WebSocketServerProtocolHandler("/websocket"),
-                        new GameMsgHandler()
+                        new GameMsgDecoder(),//自定义消息解码器
+                        new GameMsgHandler(),//自定义消息处理器
+                        new GameMsgEncoder()// 自定消息编码器
+
                 );
             }
         });

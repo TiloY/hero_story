@@ -36,3 +36,12 @@ httpServerCodec() 在它内部保证了我们消息的完整性
 netty 怎么消息长度的  是 websocket 来保证  读消息的时候 会预处理下消息头   
 在发消息之前websocket 会加上  ，socket   消息的长度是要我们自己处理的 
 
+## 配置 protocbuf 的 环境变量  在path 
+生成的命令
+```shell
+protoc.exe --java_out=. .\GameMsgProtocol.proto
+```
+生成在当前目录下  根据 当前目录下的 GameMsgProtocol.proto 文件 ‘
+
+
+
