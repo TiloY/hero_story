@@ -17,8 +17,8 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 public class ServerMain {
 
     public static void main(String[] args) {
-        EventLoopGroup boosGroup = new NioEventLoopGroup(); // 处理客服端的连接
-        EventLoopGroup workerGroup = new NioEventLoopGroup();// 工作线程池
+        EventLoopGroup boosGroup = new NioEventLoopGroup(); //1.处理客服端的连接
+        EventLoopGroup workerGroup = new NioEventLoopGroup();//2.工作线程池
 
         ServerBootstrap b = new ServerBootstrap();
         b.group(boosGroup, workerGroup);
@@ -29,7 +29,8 @@ public class ServerMain {
                 ch.pipeline().addLast(
                         new HttpServerCodec(),
                         new HttpObjectAggregator(65535),
-                        new WebSocketServerProtocolHandler("/websocket")
+                        new WebSocketServerProtocolHandler("/websocket"),
+                        new GameMsgHandler()
                 );
             }
         });
