@@ -17,7 +17,14 @@ import java.util.Map;
  * 2.
  */
 public final class GameMsgRecognizer {
+    /**
+     * 日志对象
+     */
     private static final Logger log = LoggerFactory.getLogger(GameMsgRecognizer.class);
+    /**
+     * 常量维护
+     */
+    public static final String GET_DEFAULT_INSTANCE = "getDefaultInstance";
 
     /**
      * 消息字典
@@ -25,19 +32,50 @@ public final class GameMsgRecognizer {
     private static final Map<Integer, GeneratedMessageV3> _msgCodeAndMsgBoyMap = new HashMap<>();
     private static final Map<Class<?>, Integer> _msgClazzAndMsgCodeMap = new HashMap<>();
 
+    /**
+     * 私有构造
+     */
     private GameMsgRecognizer() {
     }
 
+    /**
+     * 动态添加字典 --反射
+     */
     public static void init() {
-        _msgCodeAndMsgBoyMap.put(GameMsgProtocol.MsgCode.USER_ENTRY_CMD_VALUE, GameMsgProtocol.UserEntryCmd.getDefaultInstance());
-        _msgCodeAndMsgBoyMap.put(GameMsgProtocol.MsgCode.WHO_ELSE_IS_HERE_CMD_VALUE, GameMsgProtocol.WhoElseIsHereCmd.getDefaultInstance());
-        _msgCodeAndMsgBoyMap.put(GameMsgProtocol.MsgCode.USER_MOVE_TO_CMD_VALUE, GameMsgProtocol.UserMoveToCmd.getDefaultInstance());
+        Class<?>[] innerClazzArray = GameMsgProtocol.class.getDeclaredClasses();
+        for (Class<?> clazz : innerClazzArray) {
+            if (!GeneratedMessageV3.class.isAssignableFrom(clazz)) {
+                continue;
+            }
 
+            String clazzName = clazz.getSimpleName();
+            clazzName =clazzName.toLowerCase();
 
-        _msgClazzAndMsgCodeMap.put(GameMsgProtocol.UserEntryResult.class, GameMsgProtocol.MsgCode.USER_ENTRY_RESULT_VALUE);
-        _msgClazzAndMsgCodeMap.put(GameMsgProtocol.WhoElseIsHereResult.class, GameMsgProtocol.MsgCode.WHO_ELSE_IS_HERE_RESULT_VALUE);
-        _msgClazzAndMsgCodeMap.put(GameMsgProtocol.UserMoveToResult.class, GameMsgProtocol.MsgCode.USER_MOVE_TO_RESULT_VALUE);
-        _msgClazzAndMsgCodeMap.put(GameMsgProtocol.UserQuitResult.class, GameMsgProtocol.MsgCode.USER_QUIT_RESULT_VALUE);
+            for (GameMsgProtocol.MsgCode msgCode : GameMsgProtocol.MsgCode.values()) {
+                String strMsgCode = msgCode.name();
+                strMsgCode = strMsgCode.replaceAll("_", "");
+                strMsgCode = strMsgCode.toLowerCase();
+
+                if (!strMsgCode.startsWith(clazzName)) {
+                    continue;
+                }
+                try {
+                    Object returnObject = clazz.getDeclaredMethod(GET_DEFAULT_INSTANCE).invoke(clazz);
+                    // 日志 消息和编号发生关联
+                    log.info("{} <====> {}", clazz.getName(), msgCode.getNumber());
+
+                    _msgCodeAndMsgBoyMap.put(
+                            msgCode.getNumber(),
+                            (GeneratedMessageV3) returnObject
+                    );
+
+                    _msgClazzAndMsgCodeMap.put(clazz, msgCode.getNumber());
+
+                } catch (Exception ex) {
+                    log.error(ex.getMessage(), ex);
+                }
+            }
+        }
     }
 
 
@@ -64,7 +102,7 @@ public final class GameMsgRecognizer {
      * @param clazz
      * @return
      */
-    public static Integer getMsgCodeByMsgClazz(Class<?> clazz)  {
+    public static Integer getMsgCodeByMsgClazz(Class<?> clazz) {
 
         if (null == clazz) {
             return null;

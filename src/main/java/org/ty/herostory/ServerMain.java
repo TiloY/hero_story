@@ -10,6 +10,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.ty.herostory.cmdhandler.CmdHandlerFactory.init;
 
@@ -17,7 +19,10 @@ import static org.ty.herostory.cmdhandler.CmdHandlerFactory.init;
  * 工程主函数
  */
 public class ServerMain {
-
+    /**
+     * 日志對象
+     */
+    private static final Logger log = LoggerFactory.getLogger(ServerMain.class);
     public static void main(String[] args) {
         init();
         GameMsgRecognizer.init();
@@ -47,7 +52,7 @@ public class ServerMain {
             ChannelFuture f = b.bind(12345).sync();
 
             if(f.isSuccess()){
-                System.out.println("服务器启动成功");
+                log.info("服务器启动成功");
             }
 
             f.channel().closeFuture().sync();
