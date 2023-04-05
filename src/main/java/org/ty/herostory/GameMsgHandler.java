@@ -1,10 +1,12 @@
 package org.ty.herostory;
 
+import com.google.protobuf.GeneratedMessageV3;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.ty.herostory.cmdhandler.ICmdHandler;
 import org.ty.herostory.cmdhandler.UserEntryCmdHandler;
 import org.ty.herostory.cmdhandler.UserMoveToCmdHandler;
 import org.ty.herostory.cmdhandler.WhoElseIsHereCmdHandler;
@@ -48,19 +50,32 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("接收到客户端消息，msgClazz=  " + msg.getClass().getName() + ", msg = " + msg);
 
+        ICmdHandler<? extends GeneratedMessageV3> cmdHandler = null;
         if (msg instanceof GameMsgProtocol.UserEntryCmd) {
-
-            (new UserEntryCmdHandler()).handle(ctx, (GameMsgProtocol.UserEntryCmd) msg);
-
+            cmdHandler = new UserEntryCmdHandler();
         } else if (msg instanceof GameMsgProtocol.WhoElseIsHereCmd) {
-
-            (new WhoElseIsHereCmdHandler()).handle(ctx, (GameMsgProtocol.WhoElseIsHereCmd) msg);
-
+            cmdHandler = new WhoElseIsHereCmdHandler();
         } else if (msg instanceof GameMsgProtocol.UserMoveToCmd) {
-
-            (new UserMoveToCmdHandler()).handle(ctx, (GameMsgProtocol.UserMoveToCmd) msg);
-
+            cmdHandler = new UserMoveToCmdHandler();
         }
+
+        if (null != cmdHandler) {
+            cmdHandler.handle(ctx, this.cast(msg));
+        }
+    }
+
+    /**
+     * 小技巧 -- 转型消息对象
+     *
+     * @param msg
+     * @param <TCmd>
+     * @return
+     */
+    private <TCmd extends GeneratedMessageV3> TCmd cast(Object msg) {
+        if (null == msg) {
+            return null;
+        }
+        return (TCmd) msg;
     }
 
 
