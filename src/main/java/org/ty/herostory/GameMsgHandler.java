@@ -6,10 +6,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.ty.herostory.cmdhandler.CmdHandlerFactory;
 import org.ty.herostory.cmdhandler.ICmdHandler;
-import org.ty.herostory.cmdhandler.UserEntryCmdHandler;
-import org.ty.herostory.cmdhandler.UserMoveToCmdHandler;
-import org.ty.herostory.cmdhandler.WhoElseIsHereCmdHandler;
 import org.ty.herostory.model.UserManager;
 import org.ty.herostory.msg.GameMsgProtocol;
 
@@ -50,17 +48,10 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("接收到客户端消息，msgClazz=  " + msg.getClass().getName() + ", msg = " + msg);
 
-        ICmdHandler<? extends GeneratedMessageV3> cmdHandler = null;
-        if (msg instanceof GameMsgProtocol.UserEntryCmd) {
-            cmdHandler = new UserEntryCmdHandler();
-        } else if (msg instanceof GameMsgProtocol.WhoElseIsHereCmd) {
-            cmdHandler = new WhoElseIsHereCmdHandler();
-        } else if (msg instanceof GameMsgProtocol.UserMoveToCmd) {
-            cmdHandler = new UserMoveToCmdHandler();
-        }
+        ICmdHandler<? extends GeneratedMessageV3> cmdHandler = CmdHandlerFactory.create(msg);
 
         if (null != cmdHandler) {
-            cmdHandler.handle(ctx, this.cast(msg));
+            cmdHandler.handle(ctx, cast(msg));
         }
     }
 
@@ -71,7 +62,7 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
      * @param <TCmd>
      * @return
      */
-    private <TCmd extends GeneratedMessageV3> TCmd cast(Object msg) {
+    private static <TCmd extends GeneratedMessageV3> TCmd cast(Object msg) {
         if (null == msg) {
             return null;
         }
