@@ -33,7 +33,7 @@ public class ServerMain {
                         new WebSocketServerProtocolHandler("/websocket"),
                         new GameMsgDecoder(),//自定义消息解码器
                         new GameMsgHandler(),//自定义消息处理器
-                        new GameMsgEncoder()// 自定消息编码器
+                        new GameMsgEncoder()// 自定义消息编码器
 
                 );
             }
