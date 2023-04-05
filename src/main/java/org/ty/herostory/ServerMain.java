@@ -11,12 +11,15 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 
+import static org.ty.herostory.cmdhandler.CmdHandlerFactory.init;
+
 /**
  * 工程主函数
  */
 public class ServerMain {
 
     public static void main(String[] args) {
+        init();
         EventLoopGroup boosGroup = new NioEventLoopGroup(); //1.处理客服端的连接
         EventLoopGroup workerGroup = new NioEventLoopGroup();//2.工作线程池
 
