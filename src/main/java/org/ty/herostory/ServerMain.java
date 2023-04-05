@@ -57,7 +57,7 @@ public class ServerMain {
             f.channel().closeFuture().sync();
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+          log.error(ex.getMessage(),ex);
         }
     }
 }

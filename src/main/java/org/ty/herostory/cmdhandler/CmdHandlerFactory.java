@@ -38,8 +38,13 @@ public final class CmdHandlerFactory {
      */
     public static void init() {
         //1.包掃描 拿當前包下所有實現了 ICmdHandler 接口的所有子類
-        Set<Class<?>> clazzSet = PackageUtil.listSubClazz(CmdHandlerFactory.class.getPackage().getName(), true, ICmdHandler.class);
+        Set<Class<?>> clazzSet = PackageUtil.listSubClazz(
+                CmdHandlerFactory.class.getPackage().getName(),
+                true,
+                ICmdHandler.class);
+
         log.info("packageScan clazzSet:{}",clazzSet);
+
         //2.遍歷
         for(Class<?> clazz: clazzSet){
             if( 0 != (clazz.getModifiers() & Modifier.ABSTRACT)){
