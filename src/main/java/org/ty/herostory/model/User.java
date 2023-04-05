@@ -1,4 +1,4 @@
-package org.ty.herostory;
+package org.ty.herostory.model;
 
 /**
  * 用户
