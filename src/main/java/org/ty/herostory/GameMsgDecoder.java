@@ -1,16 +1,21 @@
 package org.ty.herostory;
 
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.Message;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
-import org.ty.herostory.msg.GameMsgProtocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GameMsgDecoder extends ChannelInboundHandlerAdapter {
+    /**
+     * 日志对象
+     */
+    private static final Logger log = LoggerFactory.getLogger(GameMsgDecoder.class);
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("====== channelRead ======= ");
+        log.info("GameMsgDecoder channelRead:{},msg:{}",ctx,msg);
         if (!((msg) instanceof BinaryWebSocketFrame)) {
             return;
         }
@@ -20,29 +25,23 @@ public class GameMsgDecoder extends ChannelInboundHandlerAdapter {
         byteBuf.readShort();
         // 读取消息编号 代表我们的消息类型
         int msgCode = byteBuf.readShort();
+
+        Message.Builder msgBuilder = GameMsgRecognizer.getBuilderByMsgCode(msgCode);
+        if (null == msgBuilder) {
+            log.error("无法识别的消息，msgCode= ",msgCode);
+            return;
+        }
+
         // 拿到消息体
         byte[] msgBody = new byte[byteBuf.readableBytes()];
         byteBuf.readBytes(msgBody);
 
-        GeneratedMessageV3 cmd = null ;
 
-        switch (msgCode){
-            case GameMsgProtocol.MsgCode.USER_ENTRY_CMD_VALUE:
-                cmd = GameMsgProtocol.UserEntryCmd.parseFrom(msgBody);
-                break ;
+        msgBuilder.clear();
+        Message newMsg = msgBuilder.mergeFrom(msgBody).build();
 
-            case GameMsgProtocol.MsgCode.WHO_ELSE_IS_HERE_CMD_VALUE:
-                cmd = GameMsgProtocol.WhoElseIsHereCmd.parseFrom(msgBody);
-                break ;
-
-            case GameMsgProtocol.MsgCode.USER_MOVE_TO_CMD_VALUE:
-                cmd = GameMsgProtocol.UserMoveToCmd.parseFrom(msgBody);
-                break ;
-        }
-
-
-        if(null != cmd ){
-            ctx.fireChannelRead(cmd);
+        if (null != newMsg) {
+            ctx.fireChannelRead(newMsg);
         }
 
 
