@@ -12,8 +12,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.ty.herostory.cmdhandler.CmdHandlerFactory.init;
+import org.ty.herostory.cmdhandler.CmdHandlerFactory;
 
 /**
  * 工程主函数
@@ -24,8 +23,8 @@ public class ServerMain {
      */
     private static final Logger log = LoggerFactory.getLogger(ServerMain.class);
     public static void main(String[] args) {
-        init();
-        GameMsgRecognizer.init();
+        CmdHandlerFactory.init();//初始化handler
+        GameMsgRecognizer.init();//初始化消息
         EventLoopGroup boosGroup = new NioEventLoopGroup(); //1.处理客服端的连接
         EventLoopGroup workerGroup = new NioEventLoopGroup();//2.工作线程池
 

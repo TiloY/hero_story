@@ -44,4 +44,7 @@ protoc.exe --java_out=. .\GameMsgProtocol.proto
 生成在当前目录下  根据 当前目录下的 GameMsgProtocol.proto 文件 ‘
 
 
+## 只有接口 沒有實現類這個是怎麽處理的？ 
+反射 + Javassist 
 
+## 怎麽動態修改字節碼 

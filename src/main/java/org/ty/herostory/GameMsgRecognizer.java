@@ -49,7 +49,7 @@ public final class GameMsgRecognizer {
             }
 
             String clazzName = clazz.getSimpleName();
-            clazzName =clazzName.toLowerCase();
+            clazzName = clazzName.toLowerCase();
 
             for (GameMsgProtocol.MsgCode msgCode : GameMsgProtocol.MsgCode.values()) {
                 String strMsgCode = msgCode.name();
