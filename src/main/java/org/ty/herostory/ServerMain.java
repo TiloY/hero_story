@@ -20,6 +20,7 @@ public class ServerMain {
 
     public static void main(String[] args) {
         init();
+        GameMsgRecognizer.init();
         EventLoopGroup boosGroup = new NioEventLoopGroup(); //1.处理客服端的连接
         EventLoopGroup workerGroup = new NioEventLoopGroup();//2.工作线程池
 

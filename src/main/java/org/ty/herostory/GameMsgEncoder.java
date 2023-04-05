@@ -21,7 +21,7 @@ public class GameMsgEncoder extends ChannelOutboundHandlerAdapter {
             return;
         }
         log.info("===GameMsgEncoder=== ");
-        Integer msgCode = GameMsgRecognizer.getMsgCodeByMsgClazz(msg);
+        Integer msgCode = GameMsgRecognizer.getMsgCodeByMsgClazz(msg.getClass());
         if (msgCode == null || msgCode <= 0) {
             log.error("无法识别的消息类型,msgClazz= " + msg.getClass().getName());
             return;
@@ -33,7 +33,7 @@ public class GameMsgEncoder extends ChannelOutboundHandlerAdapter {
         //写消息长度
         byteBuf.writeShort((short) 0);
         //写消息类型
-        byteBuf.writeShort((short) ((int) msgCode ));
+        byteBuf.writeShort((short) ((int) msgCode));
         //写消息体
         byteBuf.writeBytes(byteArray);
         //使用固定载体把消息写出去
