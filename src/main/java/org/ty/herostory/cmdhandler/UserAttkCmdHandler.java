@@ -24,14 +24,20 @@ public class UserAttkCmdHandler implements ICmdHandler<GameMsgProtocol.UserAttkC
         Integer attkUserId = (Integer) ctx.channel().attr(AttributeKey.valueOf(USER_ID)).get();
         Integer targetUserId = cmd.getTargetUserId();
 
-        //構建對象
-        GameMsgProtocol.UserAttkResult newResult = GameMsgProtocol
-                .UserAttkResult
-                .newBuilder()
-                .setAttkUserId(attkUserId)
-                .setTargetUserId(targetUserId)
-                .build();
+        GameMsgProtocol.UserAttkResult.Builder resultBuilder = GameMsgProtocol.UserAttkResult.newBuilder();
+        resultBuilder.setAttkUserId(attkUserId);
+        resultBuilder.setTargetUserId(targetUserId);
+
+        GameMsgProtocol.UserAttkResult newResult = resultBuilder.build();
+
         // 廣播消息
         BroadCaster.broadcast(newResult);
+
+        GameMsgProtocol.UserSubtractHpResult.Builder resultBuilder2 = GameMsgProtocol.UserSubtractHpResult.newBuilder();
+        resultBuilder2.setTargetUserId(targetUserId);
+        resultBuilder2.setSubtractHp(10);
+
+        GameMsgProtocol.UserSubtractHpResult newResult2 = resultBuilder2.build();
+        BroadCaster.broadcast(newResult2);
     }
 }

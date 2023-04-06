@@ -22,7 +22,7 @@ public class GameMsgEncoder extends ChannelOutboundHandlerAdapter {
         }
         log.info("===GameMsgEncoder=== ");
         Integer msgCode = GameMsgRecognizer.getMsgCodeByMsgClazz(msg.getClass());
-        if (msgCode == null || msgCode <= 0) {
+        if (msgCode == null || msgCode < 0) {
             log.error("无法识别的消息类型,msgClazz= " + msg.getClass().getName());
             return;
         }
