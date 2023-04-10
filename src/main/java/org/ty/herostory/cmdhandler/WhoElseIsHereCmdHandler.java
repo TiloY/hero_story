@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ty.herostory.model.User;
 import org.ty.herostory.model.UserManager;
-import org.ty.herostory.msg.GameMsgProtocol;
 
 /**
  * 处理谁在场

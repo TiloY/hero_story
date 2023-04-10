@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.ty.herostory.cmdhandler.CmdHandlerFactory;
 import org.ty.herostory.cmdhandler.ICmdHandler;
 import org.ty.herostory.model.UserManager;
-import org.ty.herostory.msg.GameMsgProtocol;
 
 public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
     private static final Logger log = LoggerFactory.getLogger(GameMsgHandler.class);

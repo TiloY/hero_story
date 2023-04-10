@@ -5,7 +5,6 @@ import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ty.herostory.BroadCaster;
-import org.ty.herostory.msg.GameMsgProtocol;
 
 /**
  * 处理移动消息
