@@ -254,6 +254,7 @@ public final class GameMsgProtocol {
      */
     com.google.protobuf.ByteString
         getHeroAvatarBytes();
+
   }
   /**
    * <pre>
