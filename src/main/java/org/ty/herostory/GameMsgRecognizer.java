@@ -4,6 +4,7 @@ import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.ty.herostory.msg.GameMsgProtocol;
 
 import java.util.HashMap;
 import java.util.Map;
