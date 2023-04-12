@@ -6816,6 +6816,8 @@ public final class GameMsgProtocol {
       return hash;
     }
 
+
+
     public static org.ty.herostory.msg.GameMsgProtocol.UserAttkCmd parseFrom(
             java.nio.ByteBuffer data)
             throws com.google.protobuf.InvalidProtocolBufferException {
