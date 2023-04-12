@@ -3,6 +3,7 @@ package org.ty.herostory.cmdhandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.ty.herostory.model.MoveState;
 import org.ty.herostory.model.User;
 import org.ty.herostory.model.UserManager;
 
@@ -29,13 +30,25 @@ public class WhoElseIsHereCmdHandler implements ICmdHandler<GameMsgProtocol.WhoE
             if (null == currentUser) {
                 continue;
             }
-            GameMsgProtocol.WhoElseIsHereResult.UserInfo
-                    userInfo = GameMsgProtocol.WhoElseIsHereResult
-                    .UserInfo.newBuilder()
-                    .setUserId(currentUser.getUserId())
-                    .setHeroAvatar(currentUser.getHeroAvatar())
-                    .build();
-            resultBuilder.addUserInfo(userInfo);
+
+            //在这里构建一个用户信息
+            GameMsgProtocol.WhoElseIsHereResult.UserInfo.Builder userInfoBuilder = GameMsgProtocol.WhoElseIsHereResult.UserInfo.newBuilder();
+            userInfoBuilder.setUserId(currentUser.getUserId());
+            userInfoBuilder.setHeroAvatar(currentUser.getHeroAvatar());
+
+            // 获取移动状态
+            MoveState moveState = currentUser.getMoveState();
+            GameMsgProtocol.WhoElseIsHereResult.UserInfo.MoveState.Builder
+                    mvStateBuilder = GameMsgProtocol.WhoElseIsHereResult.UserInfo.MoveState.newBuilder();
+            mvStateBuilder.setFromPosX(moveState.getFromPosX());
+            mvStateBuilder.setFromPosY(moveState.getFromPosY());
+            mvStateBuilder.setToPosX(moveState.getToPosX());
+            mvStateBuilder.setToPosY(moveState.getToPosY());
+            mvStateBuilder.setStartTime(moveState.getStartTime());
+            // 将移动状态设置到用户身上去
+            userInfoBuilder.setMoveState(mvStateBuilder);
+
+            resultBuilder.addUserInfo(userInfoBuilder);
         }
 
         GameMsgProtocol.WhoElseIsHereResult newResult = resultBuilder.build();

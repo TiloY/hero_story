@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.ty.herostory.BroadCaster;
 import org.ty.herostory.model.User;
 import org.ty.herostory.model.UserManager;
-import org.ty.herostory.msg.GameMsgProtocol;
 
 /**
  * 处理入场信息
@@ -22,12 +21,12 @@ public class UserEntryCmdHandler implements ICmdHandler<GameMsgProtocol.UserEntr
      * 处理入场消息
      *
      * @param ctx
-     * @param msg
+     * @param cmd
      */
-    public void handle(ChannelHandlerContext ctx, GameMsgProtocol.UserEntryCmd msg) {
-        log.info("UserEntryCmdHandler handle : {}", msg);
+    public void handle(ChannelHandlerContext ctx, GameMsgProtocol.UserEntryCmd cmd) {
+        log.info("UserEntryCmdHandler handle : {}", cmd);
         // 从指令对象中获取用户id 和英雄形象
-        GameMsgProtocol.UserEntryCmd cmd = msg;
+
         GameMsgProtocol.UserEntryResult.Builder resultBuilder = GameMsgProtocol.UserEntryResult.newBuilder();
         resultBuilder.setUserId(cmd.getUserId());
         resultBuilder.setHeroAvatar(cmd.getHeroAvatar());
