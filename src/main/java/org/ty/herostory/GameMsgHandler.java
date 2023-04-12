@@ -3,6 +3,7 @@ package org.ty.herostory;
 import com.google.protobuf.GeneratedMessageV3;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,8 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        BroadCaster.addChannel((ctx.channel()));
+
+        BroadCaster.addChannel(ctx.channel());
     }
 
     /**
@@ -30,25 +32,30 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         super.handlerRemoved(ctx);
         BroadCaster.removeChannel(ctx.channel());
-        //拿到用户id
-        Integer userId = (Integer) ctx.channel().attr(AttributeKey.valueOf("userId")).get();
-        if (null == userId) {
+
+        Integer userId = (Integer)ctx.channel().attr(AttributeKey.valueOf("userId")).get();
+        if(null == userId){
             return;
         }
+
+        //移除用户
         UserManager.removeUserById(userId);
-        GameMsgProtocol.UserQuitResult newResult = GameMsgProtocol.UserQuitResult
-                .newBuilder()
-                .setQuitUserId(userId)
-                .build();
-        //将离场消息广播出去
+
+        // 广播用户离场的消息
+        GameMsgProtocol.UserQuitResult.Builder resultBuilder = GameMsgProtocol.UserQuitResult.newBuilder();
+        resultBuilder.setQuitUserId(userId);
+
+        GameMsgProtocol.UserQuitResult newResult = resultBuilder.build();
+
         BroadCaster.broadcast(newResult);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("接收到客户端消息，msgClazz=  " + msg.getClass().getName() + ", msg = " + msg);
+        Class<?> msgClazz = msg.getClass();
+        log.info("接收到客户端消息，msgClazz=  {}, msg ={}",msgClazz.getName(),msg);
 
-        ICmdHandler<? extends GeneratedMessageV3> cmdHandler = CmdHandlerFactory.create(msg.getClass());
+        ICmdHandler<? extends GeneratedMessageV3> cmdHandler = CmdHandlerFactory.create(msgClazz);
 
         if (null != cmdHandler) {
             cmdHandler.handle(ctx, cast(msg));

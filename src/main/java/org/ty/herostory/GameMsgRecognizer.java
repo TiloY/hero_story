@@ -102,7 +102,7 @@ public final class GameMsgRecognizer {
      * @return
      */
     public static Message.Builder getBuilderByMsgCode(Integer msgCode) {
-        if (msgCode == null || msgCode < 0) {
+        if ( msgCode < 0) {
             return null;
         }
         GeneratedMessageV3 msg = _msgCodeAndMsgBodyMap.get(msgCode);

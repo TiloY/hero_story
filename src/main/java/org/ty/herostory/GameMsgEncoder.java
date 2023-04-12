@@ -20,22 +20,24 @@ public class GameMsgEncoder extends ChannelOutboundHandlerAdapter {
             super.write(ctx, msg, promise);
             return;
         }
-        log.info("===GameMsgEncoder=== ");
-        Integer msgCode = GameMsgRecognizer.getMsgCodeByMsgClazz(msg.getClass());
-        if (msgCode == null || msgCode < 0) {
+
+        Class<?> msgClazz = msg.getClass();
+
+        int msgCode = GameMsgRecognizer.getMsgCodeByMsgClazz(msgClazz);
+        if (msgCode <= -1) {
             log.error("无法识别的消息类型,msgClazz= " + msg.getClass().getName());
             return;
         }
         //将消息转成字节数组
-        byte[] byteArray = ((GeneratedMessageV3) msg).toByteArray();
+        byte[] msgBody = ((GeneratedMessageV3) msg).toByteArray();
         //申请一个BytBuf 对象
         ByteBuf byteBuf = ctx.alloc().buffer();
         //写消息长度
         byteBuf.writeShort((short) 0);
         //写消息类型
-        byteBuf.writeShort((short) ((int) msgCode));
+        byteBuf.writeShort((short)  msgCode);
         //写消息体
-        byteBuf.writeBytes(byteArray);
+        byteBuf.writeBytes(msgBody);
         //使用固定载体把消息写出去
         BinaryWebSocketFrame frame = new BinaryWebSocketFrame(byteBuf);
         super.write(ctx, frame, promise);
