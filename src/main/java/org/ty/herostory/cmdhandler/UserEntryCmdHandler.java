@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.ty.herostory.BroadCaster;
 import org.ty.herostory.model.User;
 import org.ty.herostory.model.UserManager;
+import org.ty.herostory.msg.GameMsgProtocol;
 
 /**
  * 处理入场信息
