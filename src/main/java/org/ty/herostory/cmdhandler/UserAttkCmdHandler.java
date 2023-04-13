@@ -16,7 +16,7 @@ public class UserAttkCmdHandler implements ICmdHandler<GameMsgProtocol.UserAttkC
 
     @Override
     public void handle(ChannelHandlerContext ctx, GameMsgProtocol.UserAttkCmd cmd) {
-        log.info(" UserAttkCmdHandler 收到攻擊指令 ");
+        log.info("当前线程 = {} ", Thread.currentThread().getName());
         if(null == ctx || null ==cmd){
             return;
         }
