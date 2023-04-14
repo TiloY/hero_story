@@ -6,8 +6,11 @@ package org.ty.herostory.model;
 public class User {
     //用户id
     private Integer userId ;
+    private String userName ;
     //用户形象
     private String heroAvatar ;
+
+    private float currHp ;
 
     private final MoveState moveState = new MoveState();
 
@@ -22,6 +25,15 @@ public class User {
         this.userId = userId;
     }
 
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public String getHeroAvatar() {
         return heroAvatar;
     }
@@ -32,5 +44,13 @@ public class User {
 
     public MoveState getMoveState() {
         return moveState;
+    }
+
+    public float getCurrHp() {
+        return currHp;
+    }
+
+    public void setCurrHp(float currHp) {
+        this.currHp = currHp;
     }
 }

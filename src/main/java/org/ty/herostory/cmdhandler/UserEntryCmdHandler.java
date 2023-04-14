@@ -28,21 +28,32 @@ public class UserEntryCmdHandler implements ICmdHandler<GameMsgProtocol.UserEntr
         log.info("UserEntryCmdHandler handle : {}", cmd);
         // 从指令对象中获取用户id 和英雄形象
 
+        if (null == ctx
+                || null == cmd) {
+            return;
+        }
+
+        Integer userId = (Integer) ctx.channel().attr(AttributeKey.valueOf("userId")).get();
+        if (null == userId) {
+            return;
+        }
+
+        // 获取
+        User existUser = UserManager.getUserById(userId);
+        if (null == existUser) {
+            return;
+        }
+
+        //获取英雄形象
+        String heroAvatar = existUser.getHeroAvatar();
+
+
         GameMsgProtocol.UserEntryResult.Builder resultBuilder = GameMsgProtocol.UserEntryResult.newBuilder();
-        resultBuilder.setUserId(cmd.getUserId());
-        resultBuilder.setHeroAvatar(cmd.getHeroAvatar());
-
-        User user = new User();
-        user.setUserId(cmd.getUserId());
-        user.setHeroAvatar(cmd.getHeroAvatar());
-        UserManager.addUser(user);
-
-        //将userId 和 channel 绑定
-        ctx.channel().attr(AttributeKey.valueOf("userId")).set(cmd.getUserId());
-
-        GameMsgProtocol.UserEntryResult newResult = resultBuilder.build();
+        resultBuilder.setUserId(userId);
+        resultBuilder.setHeroAvatar(heroAvatar);
 
         //构建结果 群发
+        GameMsgProtocol.UserEntryResult newResult = resultBuilder.build();
         BroadCaster.broadcast(newResult);
         log.info(" UserEntryCmdHandler broadcast :{}", newResult);
     }

@@ -25,6 +25,7 @@ public class ServerMain {
     public static void main(String[] args) {
         CmdHandlerFactory.init();//初始化handler
         GameMsgRecognizer.init();//初始化消息
+        MySqlSessionFactory.init();//初始化 MySql 会话工厂
         EventLoopGroup boosGroup = new NioEventLoopGroup(); //1.处理客服端的连接
         EventLoopGroup workerGroup = new NioEventLoopGroup();//2.工作线程池
 
